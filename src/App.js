@@ -1,28 +1,56 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import Chatkit from '@pusher/chatkit'
+import MessageList from './components/MessageList'
+import SendMessageForm from './components/SendMessageForm'
+import RoomList from './components/RoomList'
+import NewRoomForm from './components/NewRoomForm'
+import { tokenUrl, instanceLocator } from './config'
+import './App.css'
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
+class App extends React.Component {
+
+    constructor() {
+        super()
+        this.state = {
+            messages: []
+        }
+    }
+
+    componentDidMount() {
+        const chatManager = new Chatkit.ChatManager({
+            instanceLocator,
+            userId: 'orion',
+            tokenProvider: new Chatkit.TokenProvider({
+                url: tokenUrl
+            })
+        })
+
+        chatManager.connect()
+        .then(currentUser => {
+            currentUser.subscribeToRoom({
+                roomId: 19313502,
+                hooks: {
+                    onNewMessage: message => {
+                        this.setState({
+                            messages: [...this.state.messages, message]
+                        })
+                    }
+                }
+            })
+        })
+    }
+
+    render() {
+        console.log(this.state.messages)
+        return (
+            <div className="app">
+                <RoomList />
+                <MessageList messages={this.state.messages} />
+                <SendMessageForm />
+                <NewRoomForm />
+            </div>
+        );
+    }
 }
 
-export default App;
+export default App
