@@ -1,8 +1,8 @@
 :root {
-  --main-color: #5ea3d0;
+  --main-color: #3de28f;
   --secondary-color: white;
   --main-text-color: #3e5869;
-  --secondary-text-color: #b0c7d6;
+  --secondary-text-color: #e2fff0;
   --send-message-form: #F5F5F5;
 }
 
@@ -82,6 +82,7 @@ html, body {
 
 .rooms-list .room.active a {
   color: var(--secondary-color);
+  text-shadow: 0px 0px 10px rgba(255,255,255, 0.6);
 }
 
 .new-room-form {
